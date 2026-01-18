@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
@@ -9,7 +11,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-public class DrivetrainSubsystem {
+public class DrivetrainSubsystem extends SubsystemBase{
     // Motors
     // ONLY RUN THE FRONT MOTORS
     // THE BACK MOTORS FOLLOW THE FRONT MOTORS
@@ -27,10 +29,10 @@ public class DrivetrainSubsystem {
 
     // Constructor
     public DrivetrainSubsystem() {
-        frontLeftMotor = new SparkMax(Constants.FRONT_LEFT_MOTOR_ID, MotorType.kBrushless);
-        frontRightMotor = new SparkMax(Constants.FRONT_RIGHT_MOTOR_ID, MotorType.kBrushless);
-        backLeftMotor = new SparkMax(Constants.BACK_LEFT_MOTOR_ID, MotorType.kBrushless);
-        backRightMotor = new SparkMax(Constants.BACK_RIGHT_MOTOR_ID, MotorType.kBrushless);
+        frontLeftMotor = new SparkMax(Constants.FRONT_LEFT_MOTOR_ID, MotorType.kBrushed);
+        frontRightMotor = new SparkMax(Constants.FRONT_RIGHT_MOTOR_ID, MotorType.kBrushed);
+        backLeftMotor = new SparkMax(Constants.BACK_LEFT_MOTOR_ID, MotorType.kBrushed);
+        backRightMotor = new SparkMax(Constants.BACK_RIGHT_MOTOR_ID, MotorType.kBrushed);
         SparkMaxConfig config = new SparkMaxConfig();
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -49,7 +51,7 @@ public class DrivetrainSubsystem {
      * @param speedForwards A number between -1.0 and 1.0, where 1.0 is 100% power.
      * @param speedTurn A number between -1.0 and 1.0, where 1.0 is 100% power.
      */
-    public void drive(double xSpeed, double ySpeed) {
-        drivetrain.tankDrive(xSpeed, ySpeed);
+    public Command drive(double xSpeed, double ySpeed) {
+        return run(() -> {drivetrain.tankDrive(xSpeed, ySpeed);});
     }    
 }
