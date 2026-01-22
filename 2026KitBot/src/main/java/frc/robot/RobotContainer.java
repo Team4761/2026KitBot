@@ -27,11 +27,21 @@ public class RobotContainer {
   }
 
   public void configDefaultCmds() {
-    int multiplier = 1;
-    double xSpeed =  xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
-    double ySpeed =  ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier);
-    scheduler.schedule(new RunCommand(() -> drive.drive(xSpeed, ySpeed)));
-}
+    scheduler.schedule(
+      new RunCommand(() -> {
+        int multiplier = 1;
+        double x = xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
+        double y = ylimiter.calculate(MathUtil.applyDeadband(controller.getRightY(), 0.08) * multiplier);
+        drive.drive(x, y);
+      }, drive)
+    );
+  }
+  public void teleopInit() {
+    // no scheduling needed when using setDefaultCommand
+  }
+  public void teleopPeriodic() {
+    // empty — default command runs via CommandScheduler in robotPeriodic()
+  }
   /**
    * Must be called from testPeriodic() method in Robot.java
   */
