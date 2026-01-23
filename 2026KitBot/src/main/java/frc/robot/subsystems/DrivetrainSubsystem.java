@@ -16,10 +16,10 @@ public class DrivetrainSubsystem extends SubsystemBase{
     // ONLY RUN THE FRONT MOTORS
     // THE BACK MOTORS FOLLOW THE FRONT MOTORS
     // CHECK THE CONSTRUCTOR
-    private SparkMax frontLeftMotor;
-    private SparkMax frontRightMotor;
-    private SparkMax backLeftMotor;
-    private SparkMax backRightMotor;
+    SparkMax frontLeftMotor;
+    SparkMax frontRightMotor;
+    SparkMax backLeftMotor;
+    SparkMax backRightMotor;
 
     DifferentialDrive drivetrain;
 
@@ -48,12 +48,10 @@ public class DrivetrainSubsystem extends SubsystemBase{
 
     /**
      * 
-     * @param xSpeed The speed of the left motors
-     * @param ySpeed The speed of the right motors
-     * @return
+     * @param speedForwards A number between -1.0 and 1.0, where 1.0 is 100% power.
+     * @param speedTurn A number between -1.0 and 1.0, where 1.0 is 100% power.
      */
     public Command drive(double xSpeed, double ySpeed) {
-        
-        return run(() -> {drivetrain.tankDrive(-xSpeed, ySpeed);});
+        return run(() -> {drivetrain.tankDrive(xSpeed, ySpeed);});
     }    
 }
