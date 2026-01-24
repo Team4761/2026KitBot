@@ -8,7 +8,10 @@ import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class DrivetrainSubsystem extends SubsystemBase{
@@ -21,39 +24,49 @@ public class DrivetrainSubsystem extends SubsystemBase{
     private SparkMax backLeftMotor;
     private SparkMax backRightMotor;
 
-    DifferentialDrive drivetrain;
+    private DifferentialDrive drivetrain;
 
-    MotorControllerGroup left;
-    MotorControllerGroup right;
-
-
-    // Constructor
     public DrivetrainSubsystem() {
+        // Initialize Motors
         frontLeftMotor = new SparkMax(Constants.FRONT_LEFT_MOTOR_ID, MotorType.kBrushed);
         frontRightMotor = new SparkMax(Constants.FRONT_RIGHT_MOTOR_ID, MotorType.kBrushed);
         backLeftMotor = new SparkMax(Constants.BACK_LEFT_MOTOR_ID, MotorType.kBrushed);
         backRightMotor = new SparkMax(Constants.BACK_RIGHT_MOTOR_ID, MotorType.kBrushed);
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0.1, 0.0, 0.0)  // P, I, D
-            .outputRange(-0.3, 0.3);  // Max 30% speed
 
-        left = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
-        right = new MotorControllerGroup(frontRightMotor, backRightMotor);
+        // -- Configure Leader Motors (Front) --
+        SparkMaxConfig frontConfig = new SparkMaxConfig();
+        frontConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+        frontConfig.idleMode(IdleMode.kBrake); 
+        
+        // Apply config to leaders
+        frontLeftMotor.configure(frontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        frontRightMotor.configure(frontConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        drivetrain = new DifferentialDrive(left, right);
+        // -- Configure Follower Motors (Back) --
+        SparkMaxConfig leftFollowerConfig = new SparkMaxConfig();
+        leftFollowerConfig.follow(frontLeftMotor);
+        leftFollowerConfig.idleMode(IdleMode.kBrake);
+        
+        SparkMaxConfig rightFollowerConfig = new SparkMaxConfig();
+        rightFollowerConfig.follow(frontRightMotor);
+        rightFollowerConfig.idleMode(IdleMode.kBrake);
+
+        // Apply config to followers
+        backLeftMotor.configure(leftFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        backRightMotor.configure(rightFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        // Initialize DifferentialDrive with only the leaders
+        // The followers will automatically mimic the leaders (I think)
+        drivetrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
     }
 
-
-    /**
-     * 
-     * @param xSpeed The speed of the left motors
-     * @param ySpeed The speed of the right motors
-     * @return
+    /*
+     * Controls the robot using Tank Drive.
+     * Method is void so it can be called inside a RunCommand loop.
+     * @param leftSpeed The speed of the left motors
+     * @param rightSpeed The speed of the right motors
      */
-    public Command drive(double xSpeed, double ySpeed) {
-        
-        return run(() -> {drivetrain.tankDrive(-xSpeed, ySpeed);});
+    public void drive(double leftSpeed, double rightSpeed) {
+        drivetrain.tankDrive(leftSpeed, rightSpeed);
     }    
 }
