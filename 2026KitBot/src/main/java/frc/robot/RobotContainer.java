@@ -28,25 +28,15 @@ public class RobotContainer {
 
   public void configDefaultCmds() {
     int multiplier = 1;
-    double xSpeed =  xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
-    double ySpeed =  ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier);
-    scheduler.schedule(new RunCommand(() -> drive.drive(xSpeed, ySpeed)));
-}
+    //double xSpeed =  xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
+    //double ySpeed =  ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier);
+    // Set a default command so the drivetrain is updated by the scheduler every tick
+    //drive.setDefaultCommand(new RunCommand(() -> drive.drive(0.2, 0.2), drive));
+  }
   /**
    * Must be called from testPeriodic() method in Robot.java
   */
   public void testPeriodic() {
-    // Motor selection
-    if (controller.getLeftBumperButton()) {
-        currentModule = (currentModule - 1) % 4;
-    }
-    if (controller.getRightBumperButton()) {
-        currentModule = (currentModule + 1) % 4;
-    }
-
-    if (drive != null) {
-        // TODO: Spin single motor
-        // TODO: Display current module stats on smart dashboard
-    }
+    //scheduler.run();
   }
 }

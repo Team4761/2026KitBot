@@ -33,16 +33,13 @@ public class DrivetrainSubsystem extends SubsystemBase{
         frontRightMotor = new SparkMax(Constants.FRONT_RIGHT_MOTOR_ID, MotorType.kBrushed);
         backLeftMotor = new SparkMax(Constants.BACK_LEFT_MOTOR_ID, MotorType.kBrushed);
         backRightMotor = new SparkMax(Constants.BACK_RIGHT_MOTOR_ID, MotorType.kBrushed);
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(0.1, 0.0, 0.0)  // P, I, D
-            .outputRange(-0.3, 0.3);  // Max 30% speed
 
+        frontLeftMotor.setSafetyEnabled(false);
+        frontRightMotor.setSafetyEnabled(false);
         left = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
         right = new MotorControllerGroup(frontRightMotor, backRightMotor);
 
-        drivetrain = new DifferentialDrive(left, right);
+        drivetrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
     }
 
 
