@@ -5,7 +5,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Drive.DrivetrainSubsystem;
 
 public class RobotContainer {
   // Subsystems
@@ -27,11 +27,13 @@ public class RobotContainer {
   }
 
   public void configDefaultCmds() {
-    int multiplier = 1;
-    //double xSpeed =  xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
-    //double ySpeed =  ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftX(), 0.08) * multiplier);
+    double multiplier = .5;
     // Set a default command so the drivetrain is updated by the scheduler every tick
-    //drive.setDefaultCommand(new RunCommand(() -> drive.drive(0.2, 0.2), drive));
+    drive.setDefaultCommand(new RunCommand(() -> {
+      double leftSpeed = xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
+      double rightSpeed = -1 * ylimiter.calculate(MathUtil.applyDeadband(controller.getRightY(), 0.08) * multiplier);
+      drive.tankDrive(leftSpeed, rightSpeed);
+    }, drive));
   }
   /**
    * Must be called from testPeriodic() method in Robot.java

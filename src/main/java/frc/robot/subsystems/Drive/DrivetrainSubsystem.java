@@ -1,14 +1,11 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class DrivetrainSubsystem extends SubsystemBase{
@@ -34,12 +31,10 @@ public class DrivetrainSubsystem extends SubsystemBase{
         backLeftMotor = new SparkMax(Constants.BACK_LEFT_MOTOR_ID, MotorType.kBrushed);
         backRightMotor = new SparkMax(Constants.BACK_RIGHT_MOTOR_ID, MotorType.kBrushed);
 
-        frontLeftMotor.setSafetyEnabled(false);
-        frontRightMotor.setSafetyEnabled(false);
         left = new MotorControllerGroup(frontLeftMotor, backLeftMotor);
         right = new MotorControllerGroup(frontRightMotor, backRightMotor);
 
-        drivetrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+        drivetrain = new DifferentialDrive(left, right);
     }
 
 
@@ -48,7 +43,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
      * @param speedForwards A number between -1.0 and 1.0, where 1.0 is 100% power.
      * @param speedTurn A number between -1.0 and 1.0, where 1.0 is 100% power.
      */
-    public Command drive(double xSpeed, double ySpeed) {
-        return run(() -> {drivetrain.tankDrive(xSpeed, ySpeed);});
-    }    
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        drivetrain.tankDrive(leftSpeed, rightSpeed);
+    }
 }
