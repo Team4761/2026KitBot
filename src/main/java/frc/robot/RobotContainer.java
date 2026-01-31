@@ -31,8 +31,8 @@ public class RobotContainer {
     double multiplier = .5;
     // Set a default command so the drivetrain is updated by the scheduler every tick
     drive.setDefaultCommand(new RunCommand(() -> {
-      double speed = xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
-      double rotation = ylimiter.calculate(MathUtil.applyDeadband(controller.getRightY(), 0.08) * multiplier);
+      double speed = xlimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.08) * multiplier);
+      double rotation = ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
       drive.arcadeDrive(speed, rotation);
     }, drive));
   }
