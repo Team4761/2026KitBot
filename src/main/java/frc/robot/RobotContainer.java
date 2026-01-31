@@ -13,6 +13,7 @@ import frc.robot.subsystems.Shooter.RunShooterCommand;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.Shooter.StopShooterCommand;
 
+
 public class RobotContainer {
   // Subsystems
   private final CommandXboxController controller;
@@ -39,9 +40,9 @@ public class RobotContainer {
     double multiplier = .5;
     // Set a default command so the drivetrain is updated by the scheduler every tick
     drive.setDefaultCommand(new RunCommand(() -> {
-      double leftSpeed = xlimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
-      double rightSpeed = -1 * ylimiter.calculate(MathUtil.applyDeadband(controller.getRightY(), 0.08) * multiplier);
-      drive.tankDrive(leftSpeed, rightSpeed);
+      double speed = xlimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.08) * multiplier);
+      double rotation = ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
+      drive.arcadeDrive(speed, rotation);
     }, drive));
 
     intake.setDefaultCommand(new StopIntakeCommand(intake));
