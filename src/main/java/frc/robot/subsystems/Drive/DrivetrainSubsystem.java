@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -43,7 +44,7 @@ public class DrivetrainSubsystem extends SubsystemBase{
      * @param speedForwards A number between -1.0 and 1.0, where 1.0 is 100% power.
      * @param speedTurn A number between -1.0 and 1.0, where 1.0 is 100% power.
      */
-    public void tankDrive(double leftSpeed, double rightSpeed) {
-        drivetrain.tankDrive(leftSpeed, rightSpeed);
+    public void arcadeDrive(double speed, double rotation) {
+        drivetrain.arcadeDrive(speed, rotation);
     }
 }
