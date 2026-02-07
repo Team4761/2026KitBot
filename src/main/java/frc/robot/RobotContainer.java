@@ -40,21 +40,25 @@ public class RobotContainer {
     double multiplier = .5;
     // Set a default command so the drivetrain is updated by the scheduler every tick
     drive.setDefaultCommand(new RunCommand(() -> {
-      double speed = xlimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.08) * multiplier);
-      double rotation = ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
+      double speed = -1 * xlimiter.calculate(MathUtil.applyDeadband(controller.getRightX(), 0.08) * multiplier);
+      double rotation = -1 * ylimiter.calculate(MathUtil.applyDeadband(controller.getLeftY(), 0.08) * multiplier);
       drive.arcadeDrive(speed, rotation);
     }, drive));
 
-    intake.setDefaultCommand(new StopIntakeCommand(intake));
-    shooter.setDefaultCommand(new StopShooterCommand(shooter));
+    //intake.setDefaultCommand(new StopIntakeCommand(intake));
+    //shooter.setDefaultCommand(new StopShooterCommand(shooter));
   }
 
   public void configBindings() {
     controller.leftTrigger().onTrue(new RunIntakeCommand(intake, 1.0));
+    controller.leftTrigger().onFalse(new StopIntakeCommand(intake));
     controller.leftBumper().onTrue(new RunIntakeCommand(intake, -1.0));
+    controller.leftBumper().onFalse(new StopIntakeCommand(intake));
 
     controller.rightTrigger().onTrue(new RunShooterCommand(shooter, 1.0));
+    controller.rightTrigger().onFalse(new StopShooterCommand(shooter));
     controller.rightBumper().onTrue(new RunShooterCommand(shooter, -1.0));
+    controller.rightBumper().onFalse(new StopShooterCommand(shooter));
   }
   /**
    * Must be called from testPeriodic() method in Robot.java

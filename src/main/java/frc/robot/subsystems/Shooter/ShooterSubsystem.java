@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SmartCIMMotor;
 
 public class ShooterSubsystem extends SubsystemBase {
-    private final SmartCIMMotor shooterMotor = new SmartCIMMotor(9);
+    private final SmartCIMMotor shooterMotor = new SmartCIMMotor(11);
 
     public ShooterSubsystem() {
         shooterMotor.setInverted(false);
